@@ -1,0 +1,29 @@
+---
+
+- name: Import Google Chrome GPG signing key
+  apt_key:
+    url: https://dl-ssl.google.com/linux/linux_signing_key.pub
+    state: present
+    id: 7FAC5991
+  when: ansible_os_family == 'Debian'
+  tags:
+    - chrome
+
+- name: Add Google Chrome x86_64 repository for Debian OS family
+  apt_repository:
+    repo: 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main'
+    state: present
+  when:
+    - ansible_os_family == 'Debian'
+    - ansible_architecture == 'x86_64'
+  tags:
+    - chrome
+
+- name: Install Google Chrome packages
+  apt:
+    name: google-chrome-stable
+    state: present
+    update_cache: yes
+  when: ansible_os_family == 'Debian'
+  tags:
+    - chrome
